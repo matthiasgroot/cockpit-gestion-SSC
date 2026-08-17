@@ -255,7 +255,9 @@
       <button data-view="mensuel">Mois</button>
       <button data-view="previsionnel">Prévisionnel</button>
       <button data-view="objectifs">Objectifs</button>
-      <button data-view="docs">Factures/Devis</button>
+    </div>
+    <div class="datamenu">
+      <button class="icon-btn" id="docsBtn" title="Créer et gérer vos factures et devis">🧾 Factures/Devis</button>
     </div>
     <div class="datamenu">
       <button class="icon-btn" id="cloudBtn" title="Synchronisation cloud — cliquez pour configurer">☁️ <span id="cloudState">hors ligne</span></button>
@@ -586,6 +588,8 @@ function renderTopControls(){
     const b=el('button',STATE.year===y?'on':'',y); b.onclick=()=>{STATE.year=y;render();}; ys.appendChild(b);
   });
   document.querySelectorAll('#tabs button').forEach(b=>b.classList.toggle('on',b.dataset.view===STATE.view));
+  const db=document.getElementById('docsBtn');
+  if(db){ const on=STATE.view==='docs'; db.style.borderColor=on?'var(--orange)':''; db.style.color=on?'var(--orange-2)':''; db.style.background=on?'var(--orange-ghost)':''; }
 }
 
 /* ---------------------- VUE ANNUELLE ---------------------- */
@@ -1096,8 +1100,8 @@ let DOCEDIT=null;
 const docOverlay=document.getElementById('docOverlay');
 function openDocEditor(doc){
   DOCEDIT=doc;
-  renderDocEditor();
   docOverlay.classList.add('open');
+  renderDocEditor();
 }
 function closeDocEditor(){ docOverlay.classList.remove('open'); DOCEDIT=null; }
 function renderDocEditor(){
@@ -1194,7 +1198,7 @@ function wireDocEditor(){
     b.onclick=()=>{ pullDocFormSafe(); DOCEDIT.lignes.splice(+b.dataset.rm,1); if(!DOCEDIT.lignes.length)DOCEDIT.lignes.push({desc:'',qty:1,pu:0,tva:20}); renderDocEditor(); };
   });
   document.getElementById('dAddLine').onclick=()=>{ pullDocFormSafe(); DOCEDIT.lignes.push({desc:'',qty:1,pu:0,tva:20}); renderDocEditor(); };
-  document.getElementById('dPreview').onclick=()=>{ pullDocFormSafe(); showSheet(DOCEDIT); };
+  document.getElementById('docPreview').onclick=()=>{ pullDocFormSafe(); showSheet(DOCEDIT); };
   ['dPaye'].forEach(id=>{ const e2=document.getElementById(id); if(e2) e2.addEventListener('change',()=>{ pullDocFormSafe(); renderDocEditor(); }); });
   document.getElementById('docSave').onclick=()=>{
     pullDocForm();
@@ -1738,6 +1742,7 @@ function downloadBlob(blob,name){const u=URL.createObjectURL(blob);const a=docum
 
 /* ============================ INIT / EVENTS ============================ */
 document.querySelectorAll('#tabs button').forEach(b=>b.onclick=()=>{STATE.view=b.dataset.view;render();});
+document.getElementById('docsBtn').onclick=()=>{STATE.view='docs';render();};
 const dataBtn=document.getElementById('dataBtn'), dataMenu=document.getElementById('dataMenu');
 dataBtn.onclick=e=>{e.stopPropagation();dataMenu.classList.toggle('open');};
 document.addEventListener('click',()=>dataMenu.classList.remove('open'));
