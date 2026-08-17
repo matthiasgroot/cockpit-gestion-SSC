@@ -260,7 +260,7 @@
       <button class="icon-btn" id="docsBtn" title="Créer et gérer vos factures et devis">🧾 Factures/Devis</button>
     </div>
     <div class="datamenu">
-      <button class="icon-btn" id="cloudBtn" title="Synchronisation cloud — cliquez pour configurer">☁️ <span id="cloudState">hors ligne</span></button>
+      <button class="icon-btn" id="cloudBtn" title="Synchronisation cloud">☁️</button>
     </div>
     <div class="datamenu">
       <button class="icon-btn" id="dataBtn">Données ▾</button>
@@ -270,10 +270,6 @@
         <button id="mExpJson">⬇︎ Exporter (sauvegarde .json)</button>
         <button id="mImpJson">⬆︎ Importer une sauvegarde</button>
         <button id="mExpXlsx">📊 Exporter en Excel</button>
-        <div class="sep"></div>
-        <button id="mCloud">☁️ Synchronisation cloud…</button>
-        <div class="sep"></div>
-        <button id="mReset" class="danger">↺ Réinitialiser (données d'origine)</button>
       </div>
     </div>
   </div>
@@ -488,9 +484,12 @@ const FB_CONFIG = {
 let cloud={db:null,ready:false,pushT:null,listening:false};
 function setCloudState(s){
   const lbl={off:'hors ligne',connecting:'connexion…',sync:'synchronisé',pending:'envoi…',error:'erreur'};
-  const sp=document.getElementById('cloudState'); if(sp)sp.textContent=lbl[s]||s;
   const b=document.getElementById('cloudBtn');
-  if(b) b.style.color = s==='sync'?'var(--green)' : (s==='error'?'var(--red)' : (s==='pending'?'var(--orange-2)':'var(--ink-dim)'));
+  if(b){
+    b.title='Synchronisation cloud : '+(lbl[s]||s);
+    b.style.color = s==='sync'?'var(--green)' : (s==='error'?'var(--red)' : (s==='pending'?'var(--orange-2)':'var(--ink-dim)'));
+    b.style.borderColor = s==='sync'?'var(--green)' : (s==='error'?'var(--red)':'');
+  }
 }
 function cloudRef(){ return cloud.db.ref('cockpit'); }
 function initCloud(){
@@ -1750,19 +1749,10 @@ document.getElementById('mSave').onclick=()=>{save();dataMenu.classList.remove('
 document.getElementById('mExpJson').onclick=()=>{exportJson();dataMenu.classList.remove('open');};
 document.getElementById('mExpXlsx').onclick=()=>{exportXlsx();dataMenu.classList.remove('open');};
 document.getElementById('mImpJson').onclick=()=>{document.getElementById('fileJson').click();dataMenu.classList.remove('open');};
-document.getElementById('mReset').onclick=()=>{
-  const extra=cloud.ready?'\n\nATTENTION : la réinitialisation sera aussi envoyée au cloud et remplacera les données de TOUS vos appareils.':'';
-  if(confirm('Réinitialiser toutes les données avec les valeurs d’origine de vos fichiers ? Vos modifications locales seront perdues.'+extra)){
-    DATA=structuredClone(DEFAULT_DATA); save(); render(); toast('Données réinitialisées');
-  }
-  dataMenu.classList.remove('open');
-};
-
 /* --- Cloud UI --- */
 const cloudOverlay=document.getElementById('cloudOverlay');
 function openCloudModal(){ cloudOverlay.classList.add('open'); }
 document.getElementById('cloudBtn').onclick=openCloudModal;
-document.getElementById('mCloud').onclick=()=>{openCloudModal();dataMenu.classList.remove('open');};
 document.getElementById('cloudClose').onclick=()=>cloudOverlay.classList.remove('open');
 cloudOverlay.onclick=e=>{if(e.target.id==='cloudOverlay')cloudOverlay.classList.remove('open');};
 
