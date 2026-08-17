@@ -1053,11 +1053,16 @@ function renderDocs(app){
   bar.innerHTML=`
     <input id="docSearch" placeholder="\ud83d\udd0d Rechercher (n\u00b0, client, description, montant, statut\u2026)" value="${(STATE.docQuery||'').replace(/"/g,'&quot;')}"
       style="flex:1;min-width:240px;background:#FBFAF8;border:1px solid var(--line-2);border-radius:10px;padding:10px 13px;font-size:13.5px;color:var(--ink)">
-    <div class="subtabs" style="margin:0">
-      <button data-f="tous">Tous</button>
-      <button data-f="facture">Factures</button>
-      <button data-f="devis">Devis</button>
-    </div>`;
+    <select id="docFilterSel" style="background:#FBFAF8;border:1px solid var(--line-2);border-radius:10px;padding:10px 13px;font-size:13.5px;color:var(--ink);font-weight:600;cursor:pointer">
+      <option value="tous">Tous les documents</option>
+      <option value="facture">Factures — toutes</option>
+      <option value="st:a_payer">Factures — \u00e0 payer</option>
+      <option value="st:payee">Factures — pay\u00e9es</option>
+      <option value="devis">Devis — tous</option>
+      <option value="st:attente">Devis — en attente</option>
+      <option value="st:accepte">Devis — accept\u00e9s</option>
+      <option value="st:refuse">Devis — refus\u00e9s</option>
+    </select>`;
   app.appendChild(bar);
   const listWrap=el('div'); listWrap.id='docsListWrap';
   app.appendChild(listWrap);
@@ -1067,10 +1072,10 @@ function renderDocs(app){
   si.style.outline='none';
   si.addEventListener('focus',()=>si.style.borderColor='var(--orange)');
   si.addEventListener('blur',()=>si.style.borderColor='var(--line-2)');
-  bar.querySelectorAll('.subtabs button').forEach(b=>{
-    b.classList.toggle('on',(STATE.docFilter||'tous')===b.dataset.f);
-    b.onclick=()=>{ STATE.docFilter=b.dataset.f; bar.querySelectorAll('.subtabs button').forEach(x=>x.classList.toggle('on',x===b)); refreshDocsList(); };
-  });
+  const sel=document.getElementById('docFilterSel');
+  sel.value=STATE.docFilter||'tous';
+  if(sel.selectedIndex<0) sel.value='tous';
+  sel.onchange=()=>{ STATE.docFilter=sel.value; refreshDocsList(); };
   refreshDocsList();
 }
 function normTxt(s){ return String(s??'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,''); }
@@ -1092,7 +1097,8 @@ function refreshDocsList(){
   const f=STATE.docFilter||'tous';
   const all=docsList();
   const list=all.filter(d=>{
-    if(f!=='tous'&&d.type!==f) return false;
+    if(f==='facture'||f==='devis'){ if(d.type!==f) return false; }
+    else if(f.startsWith('st:')){ if(d.statut!==f.slice(3)) return false; }
     if(!words.length) return true;
     const blob=docSearchBlob(d);
     return words.every(w=>blob.includes(w));
