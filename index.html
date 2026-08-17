@@ -988,6 +988,7 @@ const COMPANY={
   cp:"59118 WAMBRECHIES", pays:"France", tva:"FR58930423983",
   email:"contact@slashsportclub.com", tel:"06 78 56 64 88",
   siret:"93042398300012", ape:"93.13Z",
+  titulaire:"FEDECO", iban:"FR76 3002 7170 3100 0206 9370 335", bic:"CMCIFRPP", banque:"CIC Mouvaux",
   footer:"DECOTTEGNIE F\u00e9licie \u2013 EURL FEDECO \u2013 SLASH Sport Club \u2013 130 Rue de L\u2019Union 59118 Wambrechies"
 };
 const DEVIS_CONDITIONS="Solde \u00e0 r\u00e9gler au plus tard le jour de l\u2019\u00e9v\u00e9nement. Paiement par virement bancaire ou carte bancaire.\n\u00c0 signature du devis, annulation \u00e0 +7 jours : 50 % du montant, \u00e0 \u22127 jours : 100 % du montant.\nLe studio Slash Sport Club est assur\u00e9 pour les activit\u00e9s encadr\u00e9es. Les participants doivent disposer de leur propre assurance responsabilit\u00e9 civile. Les donn\u00e9es recueillies sont utilis\u00e9es uniquement pour la gestion de la prestation et ne seront pas transmises \u00e0 des tiers.";
@@ -1047,10 +1048,61 @@ function renderDocs(app){
   head.appendChild(right);
   app.appendChild(head);
 
-  const list=docsList().slice().sort((a,b)=>(b.dateEmission||'').localeCompare(a.dateEmission||'')||(b.createdAt||0)-(a.createdAt||0));
+  // Barre de recherche + filtres
+  const bar=el('div'); bar.style.cssText='display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:16px';
+  bar.innerHTML=`
+    <input id="docSearch" placeholder="\ud83d\udd0d Rechercher (n\u00b0, client, description, montant, statut\u2026)" value="${(STATE.docQuery||'').replace(/"/g,'&quot;')}"
+      style="flex:1;min-width:240px;background:#FBFAF8;border:1px solid var(--line-2);border-radius:10px;padding:10px 13px;font-size:13.5px;color:var(--ink)">
+    <div class="subtabs" style="margin:0">
+      <button data-f="tous">Tous</button>
+      <button data-f="facture">Factures</button>
+      <button data-f="devis">Devis</button>
+    </div>`;
+  app.appendChild(bar);
+  const listWrap=el('div'); listWrap.id='docsListWrap';
+  app.appendChild(listWrap);
+
+  const si=document.getElementById('docSearch');
+  si.addEventListener('input',()=>{ STATE.docQuery=si.value; refreshDocsList(); });
+  si.style.outline='none';
+  si.addEventListener('focus',()=>si.style.borderColor='var(--orange)');
+  si.addEventListener('blur',()=>si.style.borderColor='var(--line-2)');
+  bar.querySelectorAll('.subtabs button').forEach(b=>{
+    b.classList.toggle('on',(STATE.docFilter||'tous')===b.dataset.f);
+    b.onclick=()=>{ STATE.docFilter=b.dataset.f; bar.querySelectorAll('.subtabs button').forEach(x=>x.classList.toggle('on',x===b)); refreshDocsList(); };
+  });
+  refreshDocsList();
+}
+function normTxt(s){ return String(s??'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,''); }
+function docSearchBlob(d){
+  const t=docTotals(d);
+  const st=(DOC_STATUTS[d.type]||[]).find(x=>x[0]===d.statut);
+  return normTxt([
+    d.numero, d.type==='facture'?'facture':'devis',
+    frDate(d.dateEmission), frDate(d.dateVente), d.dateEmission, d.dateVente,
+    d.client?.nom, d.client?.adresse, d.prestation,
+    (d.lignes||[]).map(l=>l.desc).join(' '),
+    st?st[1]:'', t.ttc.toFixed(2), t.ttc.toFixed(2).replace('.',','), t.ht.toFixed(2), Math.round(t.ttc)
+  ].join(' '));
+}
+function refreshDocsList(){
+  const wrap=document.getElementById('docsListWrap'); if(!wrap)return;
+  const q=normTxt(STATE.docQuery||'').trim();
+  const words=q?q.split(/\s+/):[];
+  const f=STATE.docFilter||'tous';
+  const all=docsList();
+  const list=all.filter(d=>{
+    if(f!=='tous'&&d.type!==f) return false;
+    if(!words.length) return true;
+    const blob=docSearchBlob(d);
+    return words.every(w=>blob.includes(w));
+  }).sort((a,b)=>(b.dateEmission||'').localeCompare(a.dateEmission||'')||(b.createdAt||0)-(a.createdAt||0));
+
   const card=el('div','card');
-  if(!list.length){
+  if(!all.length){
     card.innerHTML=`<p style="margin:0">Aucun document pour l\u2019instant. Cr\u00e9ez votre premi\u00e8re facture ou votre premier devis avec les boutons ci-dessus : num\u00e9rotation automatique, calculs TVA, et export PDF fid\u00e8le \u00e0 vos mod\u00e8les.</p>`;
+  } else if(!list.length){
+    card.innerHTML=`<p style="margin:0" class="note">Aucun document ne correspond \u00e0 votre recherche${f!=='tous'?' dans les '+(f==='facture'?'factures':'devis'):''}.</p>`;
   } else {
     card.style.overflowX='auto';
     let rows='';
@@ -1058,7 +1110,7 @@ function renderDocs(app){
       const t=docTotals(d);
       rows+=`<tr>
         <td class="l" style="font-weight:700;white-space:nowrap">${d.numero}</td>
-        <td class="l"><span class="pillst ${d.type==='facture'?'grey':'grey'}" style="background:${d.type==='facture'?'var(--orange-ghost)':'var(--panel-3)'};color:${d.type==='facture'?'var(--orange-2)':'var(--ink-dim)'}">${d.type==='facture'?'Facture':'Devis'}</span></td>
+        <td class="l"><span class="pillst" style="background:${d.type==='facture'?'var(--orange-ghost)':'var(--panel-3)'};color:${d.type==='facture'?'var(--orange-2)':'var(--ink-dim)'}">${d.type==='facture'?'Facture':'Devis'}</span></td>
         <td class="l" style="white-space:nowrap">${frDate(d.dateEmission)}</td>
         <td class="l">${(d.client?.nom||'\u2014')}</td>
         <td class="num" style="font-weight:700;white-space:nowrap">${eur(t.ttc)}</td>
@@ -1070,12 +1122,14 @@ function renderDocs(app){
           <button class="btn ghost sm" style="color:var(--red);border-color:var(--red)" onclick="delDoc('${d.id}')" title="Supprimer">\u2715</button>
         </td></tr>`;
     });
+    const tot=list.reduce((s,d)=>s+docTotals(d).ttc,0);
     card.innerHTML=`<table class="edit-table"><thead><tr>
       <th class="l">N\u00b0</th><th class="l">Type</th><th class="l">Date</th><th class="l">Client</th><th>Total TTC</th><th class="l">Statut</th><th></th>
       </tr></thead><tbody>${rows}</tbody></table>
-      <p class="note" style="margin-top:12px">Les documents sont enregistr\u00e9s avec le reste de vos donn\u00e9es (cloud compris). \u00ab PDF \u00bb ouvre l\u2019aper\u00e7u : le bouton d\u2019export utilise l\u2019impression du navigateur \u2014 choisissez \u00ab Enregistrer au format PDF \u00bb comme destination.</p>`;
+      <p class="note" style="margin-top:12px">${list.length} document${list.length>1?'s':''}${words.length||f!=='tous'?' (filtr\u00e9s)':''} \u00b7 total TTC affich\u00e9 : <b class="num">${eur(round2(tot))}</b>. \u00ab PDF \u00bb ouvre l\u2019aper\u00e7u : choisissez \u00ab Enregistrer au format PDF \u00bb comme destination d\u2019impression.</p>`;
   }
-  app.appendChild(card);
+  wrap.innerHTML='';
+  wrap.appendChild(card);
 }
 function editDoc(id){ const d=docsList().find(x=>x.id===id); if(d) openDocEditor(structuredClone(d)); }
 function dupDoc(id){
@@ -1258,7 +1312,10 @@ function sheetHtml(d){
       <div><span>TOTAL TVA</span><b>${eur(t.tva)}</b></div>
       <div class="grand"><span>TOTAL TTC</span><b>${eur(t.ttc)}</b></div>
     </div>
-    ${isF?`<div class="s-due" style="width:64mm;margin-left:auto"><span>MONTANT D\u00db</span><span>${eur(du)}</span></div>`:''}
+    ${isF?`<div class="s-due" style="width:64mm;margin-left:auto"><span>MONTANT D\u00db</span><span>${eur(du)}</span></div>
+    <div class="s-box"><b class="t">R\u00c8GLEMENT PAR VIREMENT BANCAIRE</b>
+    Titulaire : ${COMPANY.titulaire} &nbsp;\u00b7&nbsp; Banque : ${COMPANY.banque}<br>
+    IBAN : <b>${COMPANY.iban}</b> &nbsp;\u00b7&nbsp; BIC : <b>${COMPANY.bic}</b></div>`:''}
     ${!isF?`<div class="s-box"><b class="t">PAIEMENT &amp; CONDITIONS D\u2019ANNULATION</b>${(d.conditions||DEVIS_CONDITIONS).replace(/\n/g,'<br>')}</div>
     <div class="s-sign">Devis \u00e0 retourner dat\u00e9, sign\u00e9 et pr\u00e9c\u00e9d\u00e9 de la mention : \u00ab Bon pour accord, Fait \u00e0 [lieu], le [date] \u00bb<br><br>Signature du client :</div>`:''}
     <div class="s-foot">N\u00b0 Siret ${COMPANY.siret} \u2013 Code APE ${COMPANY.ape}<br>${COMPANY.footer}</div>
