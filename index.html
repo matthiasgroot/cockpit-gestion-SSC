@@ -176,6 +176,60 @@
     .split{grid-template-columns:1fr}
     .mini-kpis{grid-template-columns:repeat(2,1fr)}
   }
+  /* ---------- Factures / Devis ---------- */
+  .pillst{display:inline-block;padding:3px 10px;border-radius:999px;font-size:11.5px;font-weight:700;white-space:nowrap}
+  .pillst.orange{background:var(--orange-ghost);color:var(--orange-2)}
+  .pillst.green{background:var(--green-ghost);color:var(--green)}
+  .pillst.red{background:var(--red-ghost);color:var(--red)}
+  .pillst.grey{background:var(--panel-3);color:var(--ink-dim)}
+  .doc-form label{font-size:12px;font-weight:600;color:var(--ink-dim);display:block;margin:0 0 5px}
+  .doc-form input,.doc-form textarea,.doc-form select{width:100%;background:#FBFAF8;border:1px solid var(--line-2);border-radius:8px;padding:9px;font-size:13.5px;color:var(--ink);font-family:inherit}
+  .doc-form input:focus,.doc-form textarea:focus,.doc-form select:focus{outline:none;border-color:var(--orange)}
+  .doc-form textarea{resize:vertical}
+  .doc-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .doc-grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+  @media(max-width:700px){.doc-grid,.doc-grid3{grid-template-columns:1fr}}
+  .lines-table{width:100%;border-collapse:collapse}
+  .lines-table th{font-size:10.5px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);text-align:left;padding:0 6px 8px;border-bottom:1.5px solid var(--ink)}
+  .lines-table th.r{text-align:right}
+  .lines-table td{padding:5px 4px;vertical-align:middle}
+  .lines-table td.r{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap;font-size:13px}
+  .lines-table input{width:100%;background:#FBFAF8;border:1px solid var(--line-2);border-radius:7px;padding:7px 8px;font-size:13px}
+  .lines-table input:focus{outline:none;border-color:var(--orange)}
+  .lines-table .rm{background:transparent;border:0;color:var(--red);cursor:pointer;font-size:17px;padding:2px 6px}
+  .doc-totaux{margin-left:auto;max-width:280px;font-size:13.5px}
+  .doc-totaux div{display:flex;justify-content:space-between;padding:4px 0}
+  .doc-totaux .grand{border-top:2px solid var(--ink);font-family:'Archivo';font-weight:800;font-size:15px;padding-top:8px;margin-top:4px}
+
+  /* ---------- Aperçu A4 & impression ---------- */
+  .sheetwrap{background:var(--panel-3);padding:20px;overflow:auto;max-height:calc(90vh - 130px)}
+  .sheet{width:210mm;min-height:288mm;background:#fff;margin:0 auto;padding:13mm 14mm 9mm;box-shadow:0 10px 34px rgba(0,0,0,.20);color:#141210;font-size:12.5px;line-height:1.5;display:flex;flex-direction:column}
+  .sheet .s-head{display:flex;justify-content:space-between;align-items:flex-start;gap:16px}
+  .sheet .s-title{font-family:'Archivo';font-weight:800;font-size:30px;letter-spacing:.02em}
+  .sheet .s-title span{color:#FF5A1E}
+  .sheet .s-co{font-size:11.5px;line-height:1.55;color:#333}
+  .sheet .s-bar{background:#16130F;color:#fff;padding:7px 12px;font-size:11.5px;margin:12px 0;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+  .sheet .s-table{width:100%;border-collapse:collapse;margin:12px 0 8px}
+  .sheet .s-table th{background:#16130F;color:#fff;font-size:10px;letter-spacing:.05em;padding:8px;text-align:left;font-weight:600}
+  .sheet .s-table th.r,.sheet .s-table td.r{text-align:right}
+  .sheet .s-table td{border-bottom:1px solid #E6E1DA;padding:8px;vertical-align:top}
+  .sheet .s-tot{margin-left:auto;width:64mm;font-size:12.5px;margin-top:4px}
+  .sheet .s-tot div{display:flex;justify-content:space-between;padding:3px 0}
+  .sheet .s-tot .grand{border-top:2px solid #16130F;font-family:'Archivo';font-weight:800;font-size:14.5px;padding-top:7px;margin-top:3px}
+  .sheet .s-due{background:#FF5A1E;color:#fff;font-family:'Archivo';font-weight:800;padding:8px 12px;margin-top:8px;display:flex;justify-content:space-between;align-items:center}
+  .sheet .s-box{border:1px solid #16130F;padding:10px 12px;margin-top:12px;font-size:11px;line-height:1.55}
+  .sheet .s-box b.t{display:block;font-family:'Archivo';letter-spacing:.08em;font-size:10.5px;margin-bottom:5px}
+  .sheet .s-sign{border:1px dashed #999;padding:10px 12px;margin-top:10px;font-size:11px;min-height:26mm}
+  .sheet .s-foot{margin-top:auto;padding-top:10px;border-top:1px solid #E6E1DA;text-align:center;font-size:9.5px;color:#555;line-height:1.5}
+  #printHost{display:none}
+  @media print{
+    body{background:#fff!important}
+    body>*{display:none!important}
+    #printHost{display:block!important}
+    #printHost .sheet{box-shadow:none;width:auto;min-height:0;margin:0;padding:0}
+    @page{size:A4;margin:12mm}
+  }
+
   @media(max-width:560px){
     .top-inner{padding:12px 14px}
     main{padding:18px 14px 70px}
@@ -201,6 +255,7 @@
       <button data-view="mensuel">Mois</button>
       <button data-view="previsionnel">Prévisionnel</button>
       <button data-view="objectifs">Objectifs</button>
+      <button data-view="docs">Factures/Devis</button>
     </div>
     <div class="datamenu">
       <button class="icon-btn" id="cloudBtn" title="Synchronisation cloud — cliquez pour configurer">☁️ <span id="cloudState">hors ligne</span></button>
@@ -228,6 +283,25 @@
 <div class="overlay" id="overlay">
   <div class="modal" id="modal"></div>
 </div>
+
+<!-- Éditeur Facture/Devis -->
+<div class="overlay" id="docOverlay">
+  <div class="modal" id="docModal" style="max-width:880px"></div>
+</div>
+
+<!-- Aperçu / Export PDF -->
+<div class="overlay" id="sheetOverlay">
+  <div class="modal" style="max-width:calc(210mm + 44px);width:auto">
+    <div class="modal-h"><h3 id="sheetTitle">Aperçu</h3>
+      <div style="display:flex;gap:10px;align-items:center">
+        <button class="btn sm" id="sheetPrint">⬇︎ Exporter en PDF / Imprimer</button>
+        <button class="close-x" id="sheetClose">×</button>
+      </div>
+    </div>
+    <div class="sheetwrap" id="sheetWrap"></div>
+  </div>
+</div>
+<div id="printHost"></div>
 
 <!-- Modal cloud -->
 <div class="overlay" id="cloudOverlay">
@@ -284,6 +358,7 @@ const AUTO_REC = ['abonnements','seances','decouverte','gymlib','classpass','pro
 /* ---- Jeu de données par défaut (transcription de vos fichiers) ---- */
 const DEFAULT_DATA = {
   meta:{ version:3, fixedDefaults:{...FIXED_DEFAULTS} },
+  docs:[],
   years:{
     "2026":{ objectif:171268.86, months:{
       "01":{kpi:{ca:15031.85,dep:11579.26,freq:747,coef:0.455,decouverte:37,abo:52,conv:0.51,ret:0.75},
@@ -372,6 +447,7 @@ function migrate(d){
     });
   }
   if(!d.meta.fixedDefaults) d.meta.fixedDefaults={...FIXED_DEFAULTS};
+  if(!Array.isArray(d.docs)) d.docs=[];
   // garantir la présence de l'objectif sur chaque année
   Object.values(d.years).forEach(yr=>{ if(yr.objectif===undefined) yr.objectif=null; });
   // v3 : les indicateurs Découvertes / Abonnés sont repris des volumes saisis en recettes
@@ -500,6 +576,7 @@ function render(){
   if(STATE.view==='annuel') renderAnnuel(app);
   else if(STATE.view==='previsionnel') renderPrevisionnel(app);
   else if(STATE.view==='objectifs') renderObjectifs(app);
+  else if(STATE.view==='docs') renderDocs(app);
   else renderMensuel(app);
 }
 
@@ -901,6 +978,299 @@ function renderPrevisionnel(app){
     charts.prev=new Chart(gc('prev'),{type:'bar',data:{labels:MONTHS.map(m=>m.slice(0,3)),datasets:ds},options:opt});
   });
 }
+
+/* ---------------------- FACTURES / DEVIS ---------------------- */
+const COMPANY={
+  nom:"SLASH Sport Club", entite:"FEDECO", adresse:"130 Rue de l\u2019Union",
+  cp:"59118 WAMBRECHIES", pays:"France", tva:"FR58930423983",
+  email:"contact@slashsportclub.com", tel:"06 78 56 64 88",
+  siret:"93042398300012", ape:"93.13Z",
+  footer:"DECOTTEGNIE F\u00e9licie \u2013 EURL FEDECO \u2013 SLASH Sport Club \u2013 130 Rue de L\u2019Union 59118 Wambrechies"
+};
+const DEVIS_CONDITIONS="Solde \u00e0 r\u00e9gler au plus tard le jour de l\u2019\u00e9v\u00e9nement. Paiement par virement bancaire ou carte bancaire.\n\u00c0 signature du devis, annulation \u00e0 +7 jours : 50 % du montant, \u00e0 \u22127 jours : 100 % du montant.\nLe studio Slash Sport Club est assur\u00e9 pour les activit\u00e9s encadr\u00e9es. Les participants doivent disposer de leur propre assurance responsabilit\u00e9 civile. Les donn\u00e9es recueillies sont utilis\u00e9es uniquement pour la gestion de la prestation et ne seront pas transmises \u00e0 des tiers.";
+const DOC_STATUTS={
+  devis:[['attente','En attente','orange'],['accepte','Accept\u00e9','green'],['refuse','Refus\u00e9','red']],
+  facture:[['a_payer','\u00c0 payer','orange'],['payee','Pay\u00e9e','green']]
+};
+function docsList(){ if(!Array.isArray(DATA.docs)) DATA.docs=[]; return DATA.docs; }
+function frDate(iso){ if(!iso) return '\u2014'; const[a,m,j]=iso.split('-'); return `${j}/${m}/${a}`; }
+function todayIso(){ const d=new Date(); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
+function nextDocNumero(type){
+  const y=new Date().getFullYear();
+  const pre=(type==='facture'?'FA-':'DE-')+y+'-';
+  let max=0;
+  docsList().forEach(d=>{ if(d.numero&&d.numero.startsWith(pre)){ const n=parseInt(d.numero.slice(pre.length),10); if(!isNaN(n)&&n>max)max=n; } });
+  return pre+String(max+1).padStart(3,'0');
+}
+function docLineCalc(l){
+  const ht=(+l.qty||0)*(+l.pu||0);
+  const tva=ht*((+l.tva||0)/100);
+  return {ht:round2(ht),tva:round2(tva),ttc:round2(ht+tva)};
+}
+function docTotals(doc){
+  let ht=0,tva=0;
+  (doc.lignes||[]).forEach(l=>{const c=docLineCalc(l);ht+=c.ht;tva+=c.tva;});
+  return {ht:round2(ht),tva:round2(tva),ttc:round2(ht+tva)};
+}
+function statutPill(doc){
+  const s=(DOC_STATUTS[doc.type]||[]).find(x=>x[0]===doc.statut)||DOC_STATUTS[doc.type][0];
+  return `<span class="pillst ${s[2]}">${s[1]}</span>`;
+}
+function blankDoc(type){
+  return {
+    id:'d'+Date.now()+Math.floor(Math.random()*1000),
+    type, numero:nextDocNumero(type),
+    dateEmission:todayIso(),
+    dateVente:todayIso(),
+    validiteJours:30,
+    client:{nom:'',adresse:''},
+    prestation:'',
+    lignes:[{desc:'',qty:1,pu:0,tva:20}],
+    conditions:type==='devis'?DEVIS_CONDITIONS:'',
+    montantPaye:0,
+    statut:type==='devis'?'attente':'a_payer',
+    createdAt:Date.now()
+  };
+}
+
+/* ----- Vue liste ----- */
+function renderDocs(app){
+  const head=el('div','section-head');
+  head.innerHTML=`<div><div class="eyebrow">Documents commerciaux</div><h1 class="section-title">Factures &amp; Devis</h1></div>`;
+  const right=el('div'); right.style.display='flex'; right.style.gap='9px'; right.style.flexWrap='wrap';
+  const bD=el('button','btn ghost','+ Nouveau devis'); bD.onclick=()=>openDocEditor(blankDoc('devis'));
+  const bF=el('button','btn','+ Nouvelle facture'); bF.onclick=()=>openDocEditor(blankDoc('facture'));
+  right.appendChild(bD); right.appendChild(bF);
+  head.appendChild(right);
+  app.appendChild(head);
+
+  const list=docsList().slice().sort((a,b)=>(b.dateEmission||'').localeCompare(a.dateEmission||'')||(b.createdAt||0)-(a.createdAt||0));
+  const card=el('div','card');
+  if(!list.length){
+    card.innerHTML=`<p style="margin:0">Aucun document pour l\u2019instant. Cr\u00e9ez votre premi\u00e8re facture ou votre premier devis avec les boutons ci-dessus : num\u00e9rotation automatique, calculs TVA, et export PDF fid\u00e8le \u00e0 vos mod\u00e8les.</p>`;
+  } else {
+    card.style.overflowX='auto';
+    let rows='';
+    list.forEach(d=>{
+      const t=docTotals(d);
+      rows+=`<tr>
+        <td class="l" style="font-weight:700;white-space:nowrap">${d.numero}</td>
+        <td class="l"><span class="pillst ${d.type==='facture'?'grey':'grey'}" style="background:${d.type==='facture'?'var(--orange-ghost)':'var(--panel-3)'};color:${d.type==='facture'?'var(--orange-2)':'var(--ink-dim)'}">${d.type==='facture'?'Facture':'Devis'}</span></td>
+        <td class="l" style="white-space:nowrap">${frDate(d.dateEmission)}</td>
+        <td class="l">${(d.client?.nom||'\u2014')}</td>
+        <td class="num" style="font-weight:700;white-space:nowrap">${eur(t.ttc)}</td>
+        <td class="l">${statutPill(d)}</td>
+        <td style="white-space:nowrap;text-align:right">
+          <button class="btn sm" onclick="openDocSheet('${d.id}')" title="Aper\u00e7u et export PDF">PDF</button>
+          <button class="btn ghost sm" onclick="editDoc('${d.id}')" title="Modifier">\u270e</button>
+          <button class="btn ghost sm" onclick="dupDoc('${d.id}')" title="Dupliquer">\u29c9</button>
+          <button class="btn ghost sm" style="color:var(--red);border-color:var(--red)" onclick="delDoc('${d.id}')" title="Supprimer">\u2715</button>
+        </td></tr>`;
+    });
+    card.innerHTML=`<table class="edit-table"><thead><tr>
+      <th class="l">N\u00b0</th><th class="l">Type</th><th class="l">Date</th><th class="l">Client</th><th>Total TTC</th><th class="l">Statut</th><th></th>
+      </tr></thead><tbody>${rows}</tbody></table>
+      <p class="note" style="margin-top:12px">Les documents sont enregistr\u00e9s avec le reste de vos donn\u00e9es (cloud compris). \u00ab PDF \u00bb ouvre l\u2019aper\u00e7u : le bouton d\u2019export utilise l\u2019impression du navigateur \u2014 choisissez \u00ab Enregistrer au format PDF \u00bb comme destination.</p>`;
+  }
+  app.appendChild(card);
+}
+function editDoc(id){ const d=docsList().find(x=>x.id===id); if(d) openDocEditor(structuredClone(d)); }
+function dupDoc(id){
+  const d=docsList().find(x=>x.id===id); if(!d)return;
+  const c=structuredClone(d);
+  c.id='d'+Date.now()+Math.floor(Math.random()*1000);
+  c.numero=nextDocNumero(c.type);
+  c.dateEmission=todayIso(); c.dateVente=todayIso(); c.createdAt=Date.now();
+  c.statut=c.type==='devis'?'attente':'a_payer'; c.montantPaye=0;
+  openDocEditor(c);
+}
+function delDoc(id){
+  const d=docsList().find(x=>x.id===id); if(!d)return;
+  if(!confirm(`Supprimer d\u00e9finitivement ${d.type==='facture'?'la facture':'le devis'} ${d.numero} ?`))return;
+  DATA.docs=docsList().filter(x=>x.id!==id);
+  save(); render(); toast('Document supprim\u00e9');
+}
+
+/* ----- \u00c9diteur ----- */
+let DOCEDIT=null;
+const docOverlay=document.getElementById('docOverlay');
+function openDocEditor(doc){
+  DOCEDIT=doc;
+  renderDocEditor();
+  docOverlay.classList.add('open');
+}
+function closeDocEditor(){ docOverlay.classList.remove('open'); DOCEDIT=null; }
+function renderDocEditor(){
+  const d=DOCEDIT; const isF=d.type==='facture';
+  const t=docTotals(d);
+  let lignes='';
+  d.lignes.forEach((l,i)=>{
+    const c=docLineCalc(l);
+    lignes+=`<tr>
+      <td style="width:44%"><input data-li="${i}" data-k="desc" value="${(l.desc||'').replace(/"/g,'&quot;')}" placeholder="Description"></td>
+      <td style="width:9%"><input data-li="${i}" data-k="qty" type="number" step="1" min="0" value="${l.qty}"></td>
+      <td style="width:13%"><input data-li="${i}" data-k="pu" type="number" step="0.01" min="0" value="${l.pu}"></td>
+      <td style="width:10%"><input data-li="${i}" data-k="tva" type="number" step="0.1" min="0" value="${l.tva}"></td>
+      <td class="r">${eur(c.tva)}</td>
+      <td class="r" style="font-weight:700">${eur(c.ttc)}</td>
+      <td><button class="rm" data-rm="${i}" title="Supprimer la ligne">\u2715</button></td></tr>`;
+  });
+  const stOpts=DOC_STATUTS[d.type].map(s=>`<option value="${s[0]}" ${d.statut===s[0]?'selected':''}>${s[1]}</option>`).join('');
+  document.getElementById('docModal').innerHTML=`
+    <div class="modal-h"><h3>${isF?'Facture':'Devis'} \u2014 ${d.numero||''}</h3><button class="close-x" id="docClose">\u00d7</button></div>
+    <div class="modal-b doc-form">
+      <div class="doc-grid3">
+        <div><label>Type</label><select id="dType"><option value="facture" ${isF?'selected':''}>Facture</option><option value="devis" ${!isF?'selected':''}>Devis</option></select></div>
+        <div><label>Num\u00e9ro</label><input id="dNum" value="${d.numero||''}"></div>
+        <div><label>Date d\u2019\u00e9mission</label><input id="dDate" type="date" value="${d.dateEmission||''}"></div>
+      </div>
+      <div class="doc-grid3" style="margin-top:12px">
+        ${isF
+          ?`<div><label>Date de vente</label><input id="dVente" type="date" value="${d.dateVente||d.dateEmission||''}"></div>
+            <div><label>Montant d\u00e9j\u00e0 pay\u00e9 (\u20ac)</label><input id="dPaye" type="number" step="0.01" min="0" value="${d.montantPaye||0}"></div>`
+          :`<div><label>Validit\u00e9 (jours)</label><input id="dValid" type="number" step="1" min="1" value="${d.validiteJours||30}"></div><div></div>`}
+        <div><label>Statut</label><select id="dStatut">${stOpts}</select></div>
+      </div>
+      <div class="doc-grid" style="margin-top:12px">
+        <div><label>Client \u2014 nom</label><input id="dCNom" value="${(d.client?.nom||'').replace(/"/g,'&quot;')}" placeholder="Nom / Soci\u00e9t\u00e9"></div>
+        <div><label>Client \u2014 adresse</label><textarea id="dCAdr" rows="3" placeholder="Adresse\nCode postal Ville\nPays">${d.client?.adresse||''}</textarea></div>
+      </div>
+      ${isF?'':`<div style="margin-top:12px"><label>Description de la prestation</label><textarea id="dPresta" rows="4" placeholder="D\u00e9crivez la prestation (date, horaires, contenu, nombre de participants\u2026)">${d.prestation||''}</textarea></div>`}
+      <div style="margin-top:16px"><label>Lignes</label>
+        <div style="overflow-x:auto"><table class="lines-table">
+          <thead><tr><th>Description</th><th>Qt\u00e9</th><th>PU HT (\u20ac)</th><th>TVA %</th><th class="r">TVA (\u20ac)</th><th class="r">Total TTC</th><th></th></tr></thead>
+          <tbody id="dLines">${lignes}</tbody></table></div>
+        <button class="btn ghost sm" id="dAddLine" style="margin-top:8px">+ Ajouter une ligne</button>
+      </div>
+      <div class="doc-totaux">
+        <div><span>Total HT</span><b class="num">${eur(t.ht)}</b></div>
+        <div><span>Total TVA</span><b class="num">${eur(t.tva)}</b></div>
+        <div class="grand"><span>Total TTC</span><b class="num">${eur(t.ttc)}</b></div>
+        ${isF?`<div style="color:var(--orange-2)"><span>Montant d\u00fb</span><b class="num">${eur(Math.max(0,round2(t.ttc-(+d.montantPaye||0))))}</b></div>`:''}
+      </div>
+      ${isF?'':`<div style="margin-top:12px"><label>Paiement &amp; conditions d\u2019annulation (imprim\u00e9es sur le devis)</label><textarea id="dCond" rows="4">${d.conditions||DEVIS_CONDITIONS}</textarea></div>`}
+    </div>
+    <div class="modal-f">
+      <button class="btn ghost sm" id="docCancel">Annuler</button>
+      <button class="btn ghost sm" id="docPreview">Aper\u00e7u PDF</button>
+      <button class="btn sm" id="docSave">\ud83d\udcbe Enregistrer</button>
+    </div>`;
+  wireDocEditor();
+}
+function pullDocForm(){
+  const d=DOCEDIT; const isF=d.type==='facture';
+  d.numero=document.getElementById('dNum').value.trim();
+  d.dateEmission=document.getElementById('dDate').value;
+  d.statut=document.getElementById('dStatut').value;
+  d.client={nom:document.getElementById('dCNom').value.trim(),adresse:document.getElementById('dCAdr').value};
+  if(isF){
+    d.dateVente=document.getElementById('dVente').value;
+    d.montantPaye=parseFloat(document.getElementById('dPaye').value)||0;
+  } else {
+    d.validiteJours=parseInt(document.getElementById('dValid').value)||30;
+    d.prestation=document.getElementById('dPresta').value;
+    d.conditions=document.getElementById('dCond').value;
+  }
+}
+function wireDocEditor(){
+  document.getElementById('docClose').onclick=closeDocEditor;
+  document.getElementById('docCancel').onclick=closeDocEditor;
+  document.getElementById('dType').onchange=e=>{
+    pullDocFormSafe();
+    DOCEDIT.type=e.target.value;
+    DOCEDIT.numero=nextDocNumero(DOCEDIT.type);
+    DOCEDIT.statut=DOCEDIT.type==='devis'?'attente':'a_payer';
+    if(DOCEDIT.type==='devis'&&!DOCEDIT.conditions) DOCEDIT.conditions=DEVIS_CONDITIONS;
+    renderDocEditor();
+  };
+  document.getElementById('dLines').querySelectorAll('input').forEach(inp=>{
+    inp.addEventListener('input',()=>{
+      const i=+inp.dataset.li,k=inp.dataset.k;
+      DOCEDIT.lignes[i][k]=k==='desc'?inp.value:(parseFloat(inp.value)||0);
+    });
+    inp.addEventListener('change',()=>{ pullDocFormSafe(); renderDocEditor(); });
+  });
+  document.getElementById('dLines').querySelectorAll('.rm').forEach(b=>{
+    b.onclick=()=>{ pullDocFormSafe(); DOCEDIT.lignes.splice(+b.dataset.rm,1); if(!DOCEDIT.lignes.length)DOCEDIT.lignes.push({desc:'',qty:1,pu:0,tva:20}); renderDocEditor(); };
+  });
+  document.getElementById('dAddLine').onclick=()=>{ pullDocFormSafe(); DOCEDIT.lignes.push({desc:'',qty:1,pu:0,tva:20}); renderDocEditor(); };
+  document.getElementById('dPreview').onclick=()=>{ pullDocFormSafe(); showSheet(DOCEDIT); };
+  ['dPaye'].forEach(id=>{ const e2=document.getElementById(id); if(e2) e2.addEventListener('change',()=>{ pullDocFormSafe(); renderDocEditor(); }); });
+  document.getElementById('docSave').onclick=()=>{
+    pullDocForm();
+    if(!DOCEDIT.numero){ toast('Indiquez un num\u00e9ro'); return; }
+    if(!DOCEDIT.client.nom){ toast('Indiquez le nom du client'); return; }
+    if(!DOCEDIT.lignes.some(l=>l.desc&&l.desc.trim())){ toast('Ajoutez au moins une ligne'); return; }
+    const i=docsList().findIndex(x=>x.id===DOCEDIT.id);
+    if(i>=0) DATA.docs[i]=DOCEDIT; else DATA.docs.push(DOCEDIT);
+    save(); closeDocEditor(); render();
+    toast((DOCEDIT?.type==='facture'?'Facture':'Devis')+' enregistr\u00e9');
+  };
+}
+function pullDocFormSafe(){ try{ pullDocForm(); }catch(e){} }
+docOverlay.onclick=e=>{ if(e.target.id==='docOverlay') closeDocEditor(); };
+
+/* ----- Feuille A4 ----- */
+function sheetHtml(d){
+  const isF=d.type==='facture';
+  const t=docTotals(d);
+  const logo=document.querySelector('.brand img')?.src||'';
+  const lignes=(d.lignes||[]).filter(l=>l.desc&&l.desc.trim()).map(l=>{
+    const c=docLineCalc(l);
+    return `<tr><td>${l.desc}</td><td class="r">${int(l.qty)}</td><td class="r">${eur(+l.pu||0)}</td><td class="r">${new Intl.NumberFormat('fr-FR',{maximumFractionDigits:1}).format(+l.tva||0)}%</td><td class="r">${eur(c.tva)}</td><td class="r"><b>${eur(c.ttc)}</b></td></tr>`;
+  }).join('');
+  const clientAdr=(d.client?.adresse||'').split('\n').map(x=>x.trim()).filter(Boolean).join('<br>');
+  const du=Math.max(0,round2(t.ttc-(+d.montantPaye||0)));
+  return `<div class="sheet">
+    <div class="s-head">
+      <div class="s-co">
+        <b style="font-size:13px">${COMPANY.nom}</b><br>${COMPANY.entite}<br>${COMPANY.adresse}<br>${COMPANY.cp}<br>${COMPANY.pays}<br>
+        N\u00b0 TVA : ${COMPANY.tva}<br>${COMPANY.email}<br>${COMPANY.tel}
+      </div>
+      <div style="text-align:right">
+        ${logo?`<img src="${logo}" style="height:13mm;display:block;margin-left:auto">`:''}
+        <div class="s-title" style="margin-top:6mm">${isF?'FACTURE':'DEVIS'}<span>/</span></div>
+      </div>
+    </div>
+    <div class="s-bar">
+      <span><b>${isF?'Facture':'Devis'} ${d.numero}</b></span>
+      <span>Date d\u2019\u00e9mission : ${frDate(d.dateEmission)}</span>
+      ${isF?`<span>Date de vente : ${frDate(d.dateVente||d.dateEmission)}</span>`
+           :`<span>Validit\u00e9 : ${d.validiteJours||30} jours \u00e0 compter de la date d\u2019\u00e9mission</span>`}
+    </div>
+    <div style="display:flex;justify-content:space-between;gap:14px;align-items:flex-start">
+      <div style="font-size:11.5px">
+        <b style="font-family:'Archivo';letter-spacing:.08em;font-size:10.5px">${isF?'FACTURE \u00c0 :':'DEVIS \u00c0 :'}</b><br>
+        <b>${d.client?.nom||''}</b><br>${clientAdr}
+      </div>
+      ${isF&&d.statut==='payee'?'<div style="border:2.5px solid #1E9E5A;color:#1E9E5A;font-family:Archivo;font-weight:800;font-size:17px;padding:5px 16px;transform:rotate(-6deg);letter-spacing:.1em">PAY\u00c9E</div>':''}
+    </div>
+    ${!isF&&d.prestation?`<div style="margin-top:10px;font-size:11.5px"><b style="font-family:'Archivo';letter-spacing:.08em;font-size:10.5px">DESCRIPTION DE LA PRESTATION :</b><br>${d.prestation.replace(/\n/g,'<br>')}</div>`:''}
+    <table class="s-table">
+      <thead><tr><th style="width:38%">DESCRIPTION</th><th class="r">QT\u00c9</th><th class="r">PRIX UNITAIRE HT (\u20ac)</th><th class="r">TAXES (%)</th><th class="r">TOTAL TVA (\u20ac)</th><th class="r">PRIX TOTAL TTC (\u20ac)</th></tr></thead>
+      <tbody>${lignes}</tbody>
+    </table>
+    <div class="s-tot">
+      <div><span>TOTAL HT</span><b>${eur(t.ht)}</b></div>
+      <div><span>TOTAL TVA</span><b>${eur(t.tva)}</b></div>
+      <div class="grand"><span>TOTAL TTC</span><b>${eur(t.ttc)}</b></div>
+    </div>
+    ${isF?`<div class="s-due" style="width:64mm;margin-left:auto"><span>MONTANT D\u00db</span><span>${eur(du)}</span></div>`:''}
+    ${!isF?`<div class="s-box"><b class="t">PAIEMENT &amp; CONDITIONS D\u2019ANNULATION</b>${(d.conditions||DEVIS_CONDITIONS).replace(/\n/g,'<br>')}</div>
+    <div class="s-sign">Devis \u00e0 retourner dat\u00e9, sign\u00e9 et pr\u00e9c\u00e9d\u00e9 de la mention : \u00ab Bon pour accord, Fait \u00e0 [lieu], le [date] \u00bb<br><br>Signature du client :</div>`:''}
+    <div class="s-foot">N\u00b0 Siret ${COMPANY.siret} \u2013 Code APE ${COMPANY.ape}<br>${COMPANY.footer}</div>
+  </div>`;
+}
+function showSheet(doc){
+  document.getElementById('sheetTitle').textContent=(doc.type==='facture'?'Facture ':'Devis ')+(doc.numero||'');
+  document.getElementById('sheetWrap').innerHTML=sheetHtml(doc);
+  document.getElementById('printHost').innerHTML=sheetHtml(doc);
+  document.getElementById('sheetOverlay').classList.add('open');
+}
+function openDocSheet(id){ const d=docsList().find(x=>x.id===id); if(d) showSheet(d); }
+document.getElementById('sheetClose').onclick=()=>document.getElementById('sheetOverlay').classList.remove('open');
+document.getElementById('sheetOverlay').onclick=e=>{ if(e.target.id==='sheetOverlay') document.getElementById('sheetOverlay').classList.remove('open'); };
+document.getElementById('sheetPrint').onclick=()=>window.print();
 
 /* ---------------------- VUE OBJECTIFS ---------------------- */
 /* Suppression d'une année (depuis l'onglet Objectifs) */
